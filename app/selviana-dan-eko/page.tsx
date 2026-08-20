@@ -7,66 +7,69 @@ import { weddingData } from '../data';
 import { Heart, Calendar, Mail, Gift, MapPin, Copy, Play, Pause, Home } from 'lucide-react';
 
 // ==========================================
-// 1. LAYER BELAKANG & DESKTOP OPTIMIZATION
+// 1. LAYER BELAKANG
 // ==========================================
 const BackgroundLayer = ({ isOpened }: { isOpened: boolean }) => (
   <div className="fixed inset-0 w-full h-full pointer-events-none overflow-hidden bg-[#F9F8F3] z-0">
     
-    {/* TRIK SAKTI: Background diputar 90 derajat di PC dengan menukar ukuran w-vh dan h-vw */}
+    {/* Background Landscape khusus PC, Normal di HP */}
     <motion.img 
       src="/images/background.png" 
       alt="bg" 
-      initial={{ opacity: 0 }} 
-      animate={{ opacity: 0.6 }} 
-      transition={{ duration: 2 }} 
+      initial={{ opacity: 0 }} animate={{ opacity: 0.6 }} transition={{ duration: 2 }} 
       className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full md:w-[100vh] md:h-[100vw] md:-rotate-90 object-cover mix-blend-multiply z-0" 
     />
     
-    {/* ORNAMEN DIAMANKAN DI PINGGIR LAYAR (Menggunakan nilai minus) AGAR TIDAK MENUMPUK DI TENGAH */}
-    <motion.img src="/images/mountain.png" initial={{ opacity: 0 }} animate={{ opacity: isOpened ? 0.5 : 0 }} transition={{ duration: 2, delay: 0.5 }} className="absolute top-[2%] left-[40%] md:top-[-20%] md:left-[30%] w-[80%] md:w-[50%] max-w-[1000px] object-contain z-10" alt="Mountain 1" />
-    <motion.img src="/images/mountain.png" initial={{ opacity: 0 }} animate={{ opacity: isOpened ? 0.5 : 0 }} transition={{ duration: 2, delay: 0.5 }} className="absolute top-[5%] -left-[15%] md:top-[-15%] md:-left-[10%] w-[80%] md:w-[60%] max-w-[1000px] object-contain -scale-x-100 z-10" alt="Mountain 3" />
-    <motion.img src="/images/mountain2.png" initial={{ opacity: 0 }} animate={{ opacity: isOpened ? 0.8 : 0 }} transition={{ duration: 2, delay: 0.7 }} className="absolute top-[15%] md:top-[25%] -right-[20%] md:-right-[-35%] w-[100%] md:w-[45%] max-w-[1000px] object-contain z-10 -rotate-[15deg]" alt="Mountain 2" />
+    <motion.img src="/images/mountain.png" initial={{ opacity: 0 }} animate={{ opacity: isOpened ? 0.5 : 0 }} transition={{ duration: 2, delay: 0.5 }} className="absolute top-[2%] left-[45%] w-[80%] md:w-[40%] object-contain z-10" alt="Mountain 1" />
+    <motion.img src="/images/mountain.png" initial={{ opacity: 0 }} animate={{ opacity: isOpened ? 0.5 : 0 }} transition={{ duration: 2, delay: 0.5 }} className="absolute top-[10%] left-[-20%] md:-left-[10%] w-[80%] md:w-[45%] object-contain -scale-x-100 z-10" alt="Mountain 3" />
+    <motion.img src="/images/mountain2.png" initial={{ opacity: 0 }} animate={{ opacity: isOpened ? 0.8 : 0 }} transition={{ duration: 2, delay: 0.7 }} className="absolute top-[20%] right-[25%] md:-right-[5%] w-[100%] md:w-[55%] object-contain z-10 -rotate-[15deg]" alt="Mountain 2" />
     
-    {/* POHON DILEBARKAN AGAR MUNCUL JELAS DARI KIRI & KANAN */}
-    <motion.img src="/images/tree.png" initial={{ opacity: 0, rotate: 20 }} animate={{ opacity: isOpened ? 0.5 : 0, rotate: isOpened ? [20, 25, 20] : 20 }} transition={{ opacity: { duration: 2, delay: 0.8 }, rotate: { repeat: Infinity, duration: 4, ease: "easeInOut" } }} 
-      className="absolute top-[25%] md:top-[40%] -left-[45%] md:-left-[15%] lg:-left-[10%] w-[30rem] md:w-[35rem] lg:w-[34rem] object-contain z-20 drop-shadow-xl" alt="Tree Left" />
-    <motion.img src="/images/tree.png" initial={{ opacity: 0, rotate: -25 }} animate={{ opacity: isOpened ? 0.5 : 0, rotate: isOpened ? [-25, -20, -25] : -25 }} transition={{ opacity: { duration: 2, delay: 0.8 }, rotate: { repeat: Infinity, duration: 4.5, ease: "easeInOut" } }} 
-      className="absolute top-[20%] md:top-[65%] -right-[45%] md:-right-[15%] lg:-right-[-8%] w-[30rem] md:w-[35rem] lg:w-[34rem] object-contain -scale-x-100 z-20 drop-shadow-xl" alt="Tree Right" />
-    <motion.img src="/images/tree.png" initial={{ opacity: 0, rotate: -10 }} animate={{ opacity: isOpened ? 0.5 : 0, rotate: isOpened ? [-20, -15, -20] : -20 }} transition={{ opacity: { duration: 2, delay: 0.8 }, rotate: { repeat: Infinity, duration: 5, ease: "easeInOut" } }} 
-      className="absolute top-[75%] md:top-[35%] -right-[15%] md:-right-[20%] w-[14rem] md:w-[44rem] object-contain z-20" alt="Tree Bot" />
+    {/* Pohon: Posisi natural untuk HP, disesuaikan untuk PC */}
+    <motion.img 
+      src="/images/tree.png" 
+      initial={{ opacity: 0, rotate: 20 }} 
+      animate={{ opacity: isOpened ? 0.5 : 0, rotate: isOpened ? [20, 25, 20] : 20 }} 
+      transition={{ opacity: { duration: 2, delay: 0.8 }, rotate: { repeat: Infinity, duration: 4, ease: "easeInOut" } }} 
+      className="absolute top-[25%] left-[-60%] md:left-[-15%] w-[30rem] md:w-[35rem] object-contain z-20" alt="Tree Left" 
+    />
+    <motion.img 
+      src="/images/tree.png" 
+      initial={{ opacity: 0, rotate: -25 }} 
+      animate={{ opacity: isOpened ? 0.5 : 0, rotate: isOpened ? [-25, -20, -25] : -25 }} 
+      transition={{ opacity: { duration: 2, delay: 0.8 }, rotate: { repeat: Infinity, duration: 4.5, ease: "easeInOut" } }} 
+      className="absolute top-[20%] right-[-60%] md:right-[-15%] w-[30rem] md:w-[35rem] object-contain -scale-x-100 z-20" alt="Tree Right" 
+    />
+    <motion.img src="/images/tree.png" initial={{ opacity: 0, rotate: -10 }} animate={{ opacity: isOpened ? 0.5 : 0, rotate: isOpened ? [-20, -15, -20] : -20 }} transition={{ opacity: { duration: 2, delay: 0.8 }, rotate: { repeat: Infinity, duration: 5, ease: "easeInOut" } }} className="absolute top-[75%] right-[30%] w-[14rem] md:w-[25rem] object-contain z-20" alt="Tree Bot" />
+    <motion.img src="/images/cloud.png" initial={{ opacity: 0 }} animate={{ opacity: isOpened ? 1 : 0 }} transition={{ duration: 2, delay: 0.9 }} className="absolute bottom-[10%] left-[-10%] w-[80%] md:w-[50%] object-contain z-20" alt="Cloud" />
+    <motion.img src="/images/rock.png" initial={{ opacity: 0 }} animate={{ opacity: isOpened ? 0.9 : 0 }} transition={{ duration: 2, delay: 1 }} className="absolute bottom-[-5%] right-[-25%] w-[40rem] md:w-[45rem] object-contain z-20" alt="Rocks" />
     
-    <motion.img src="/images/cloud.png" initial={{ opacity: 0 }} animate={{ opacity: isOpened ? 1 : 0 }} transition={{ duration: 2, delay: 0.9 }} className="absolute bottom-[10%] -left-[15%] md:-left-[-15%] md:-bottom-[1%] w-[80%] md:w-[50%] max-w-[600px] object-contain z-20" alt="Cloud" />
-    <motion.img src="/images/rock.png" initial={{ opacity: 0 }} animate={{ opacity: isOpened ? 0.9 : 0 }} transition={{ duration: 2, delay: 1 }} className="absolute -bottom-[5%] md:-bottom-[10%] -right-[20%] md:-right-[5%] w-[40rem] md:w-[40rem] object-contain z-20" alt="Rocks" />
-    
-    <motion.img src="/images/corner-bot-left.png" initial={{ x: "-100%", opacity: 0 }} animate={{ x: isOpened ? "0%" : "-100%", opacity: isOpened ? 1 : 0 }} transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }} className="absolute bottom-0 left-0 w-[65vw] md:w-[30vw] max-w-[400px] object-left-bottom drop-shadow-lg z-30" alt="Bot Left" />
-    <motion.img src="/images/corner-bot-right.png" initial={{ x: "100%", opacity: 0 }} animate={{ x: isOpened ? "0%" : "100%", opacity: isOpened ? 1 : 0 }} transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }} className="absolute bottom-0 right-0 w-[65vw] md:w-[30vw] max-w-[400px] object-right-bottom drop-shadow-lg z-30" alt="Bot Right" />
+    {/* Wayang Bawah */}
+    <motion.img src="/images/corner-bot-left.png" initial={{ x: "-100%", opacity: 0 }} animate={{ x: isOpened ? "0%" : "-100%", opacity: isOpened ? 1 : 0 }} transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }} className="absolute bottom-0 left-0 w-[65vw] md:w-[30vw] max-w-lg object-left-bottom drop-shadow-lg z-30" alt="Bot Left" />
+    <motion.img src="/images/corner-bot-right.png" initial={{ x: "100%", opacity: 0 }} animate={{ x: isOpened ? "0%" : "100%", opacity: isOpened ? 1 : 0 }} transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }} className="absolute bottom-0 right-0 w-[65vw] md:w-[30vw] max-w-lg object-right-bottom drop-shadow-lg z-30" alt="Bot Right" />
   </div>
 );
 
 // ==========================================
-// 2. LAYER DEPAN / BINGKAI ATAS (Fix iOS & PC)
+// 2. LAYER DEPAN / BINGKAI ATAS (Dengan Deteksi iOS & PC)
 // ==========================================
 const ForegroundLayer = ({ isOpened }: { isOpened: boolean }) => {
   const [topOpenedPos, setTopOpenedPos] = useState("-20vh");
 
   useEffect(() => {
-    // Membuat fungsi terpisah agar bisa dipanggil ulang saat layar di-resize
     const updatePosition = () => {
       const isIOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
-      const isDesktop = window.innerWidth >= 768; // Deteksi apakah ini layar PC/Laptop
+      const isDesktop = window.innerWidth >= 768;
 
       if (isDesktop) {
-        setTopOpenedPos("-48vh"); // Tarik jauh ke atas untuk PC (Bisa diubah angkanya kalau masih kurang/lebih)
+        setTopOpenedPos("-35vh"); // Posisi tinggi khusus PC
       } else if (isIOS) {
-        setTopOpenedPos("-26vh"); // Posisi untuk iPhone
+        setTopOpenedPos("-24vh"); // Khusus iPhone
       } else {
-        setTopOpenedPos("-20vh"); // Posisi untuk Android (Samsung, dll)
+        setTopOpenedPos("-20vh"); // Android
       }
     };
-
-    updatePosition(); // Jalankan saat web pertama kali dibuka
-    window.addEventListener('resize', updatePosition); // Pantau otomatis jika ukuran jendela browser ditarik-tarik
-    
+    updatePosition();
+    window.addEventListener('resize', updatePosition);
     return () => window.removeEventListener('resize', updatePosition);
   }, []);
 
@@ -77,7 +80,7 @@ const ForegroundLayer = ({ isOpened }: { isOpened: boolean }) => {
         initial={{ x: "-50%", top: "45%", y: "-50%", scale: 1.2, opacity: 0 }} 
         animate={isOpened ? { x: "-50%", top: topOpenedPos, y: "0%", scale: 1.1, opacity: 1 } : { x: "-50%", top: "45%", y: "-50%", scale: 1.2, opacity: 1 }} 
         transition={{ duration: 1.5, ease: [0.76, 0, 0.24, 1] }} 
-        className="absolute left-1/2 w-[70vw] md:w-[44rem] drop-shadow-md z-10" 
+        className="absolute left-1/2 w-[70vw] md:w-[28rem] drop-shadow-md z-10" 
         alt="Gunungan" 
       />
       <motion.img src="/images/corner-top-left.png" initial={{ opacity: 0, x: -50, y: -50 }} animate={{ opacity: 0.9, x: 0, y: 0 }} transition={{ duration: 1.5 }} className="absolute top-0 left-0 w-36 md:w-[26rem] object-left-top drop-shadow-sm z-20" alt="Top Left" />
