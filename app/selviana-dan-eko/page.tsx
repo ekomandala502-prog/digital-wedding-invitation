@@ -138,7 +138,7 @@ function WeddingContent() {
   };
 
   // Fungsi Kirim Data (POST)
-  const submitRSVP = async (e: React.FormEvent<HTMLFormElement>) => { // <-- Ditambahkan <HTMLFormElement> di sini
+  const submitRSVP = async (e: React.FormEvent<HTMLFormElement>) => { 
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -146,7 +146,7 @@ function WeddingContent() {
       try {
         await fetch(scriptURL, {
           method: 'POST',
-          mode: 'no-cors', // <-- Tambahkan ini agar aman dari blokiran CORS browser
+          mode: 'no-cors', 
           body: JSON.stringify({ nama: rsvpName, kehadiran: rsvpAttendance, ucapan: rsvpMessage }),
           headers: { 
             'Content-Type': 'text/plain;charset=utf-8' 
@@ -189,7 +189,7 @@ function WeddingContent() {
             </div>
             <motion.div exit={{ y: 50, opacity: 0, transition: { duration: 0.8, ease: "easeIn" } }} className="absolute bottom-[8%] md:bottom-[6%] z-20 text-center px-6 flex flex-col items-center w-full max-w-xl mx-auto">
               <p className="tracking-[0.3em] text-[10px] md:text-xs uppercase mb-3 text-slate-500 font-medium">The Wedding Of</p>
-              <h1 className="font-serif text-4xl md:text-6xl mb-6 text-slate-800 drop-shadow-sm">{weddingData.groom.nickname} <span className="font-script text-slate-400 mx-1">&</span> {weddingData.bride.nickname}</h1>
+              <h1 className="font-serif text-4xl md:text-6xl mb-6 text-slate-800 drop-shadow-sm">{weddingData.bride.nickname} <span className="font-script text-slate-400 mx-1">&</span> {weddingData.groom.nickname}</h1>
               <div className="mb-8 text-center bg-white/70 backdrop-blur-md px-10 py-4 rounded-xl border border-slate-200 shadow-md">
                 <p className="text-[9px] uppercase tracking-widest text-slate-500 mb-1">Kepada Yth.</p>
                 <p className="text-lg font-serif italic text-slate-800 font-medium">{guestName}</p>
@@ -210,9 +210,9 @@ function WeddingContent() {
            <FadeIn>
              <p className="font-script text-4xl md:text-5xl text-slate-600 mb-2">You're Invited</p>
              <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-6">
-               <h2 className="font-serif text-5xl md:text-7xl text-slate-800">{weddingData.groom.nickname}</h2>
-               <span className="font-script text-4xl text-slate-400">&</span>
                <h2 className="font-serif text-5xl md:text-7xl text-slate-800">{weddingData.bride.nickname}</h2>
+               <span className="font-script text-4xl text-slate-400">&</span>
+               <h2 className="font-serif text-5xl md:text-7xl text-slate-800">{weddingData.groom.nickname}</h2>
              </div>
              <DividerElegant />
              <p className="tracking-[0.2em] uppercase text-xs md:text-sm font-medium text-slate-600 mb-12">{weddingData.dateText}</p>
@@ -255,9 +255,9 @@ function WeddingContent() {
             <div className="max-w-4xl mx-auto bg-white/70 backdrop-blur-md p-10 md:p-16 border border-slate-200 shadow-xl rounded-2xl">
               <div className="flex flex-col md:flex-row items-center justify-between gap-10">
                 <div className="flex-1 flex flex-col items-center text-center">
-                  <h4 className="font-serif text-3xl md:text-4xl font-bold mb-3 text-slate-800">{weddingData.groom.name}</h4>
-                  <p className="text-sm md:text-base text-slate-600 mb-6 italic">{weddingData.groom.parents}</p>
-                  <a href={weddingData.groom.instagram || "#"} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 px-6 py-2 bg-slate-800 text-white hover:bg-slate-700 hover:scale-105 transition-all rounded-full text-[10px] uppercase tracking-widest shadow-md">
+                  <h4 className="font-serif text-3xl md:text-4xl font-bold mb-3 text-slate-800">{weddingData.bride.name}</h4>
+                  <p className="text-sm md:text-base text-slate-600 mb-6 italic">{weddingData.bride.parents}</p>
+                  <a href={weddingData.bride.instagram || "#"} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 px-6 py-2 bg-slate-800 text-white hover:bg-slate-700 hover:scale-105 transition-all rounded-full text-[10px] uppercase tracking-widest shadow-md">
                     <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg> Instagram
                   </a>
                 </div>
@@ -265,9 +265,9 @@ function WeddingContent() {
                   <span className="font-script text-5xl md:text-6xl text-slate-400">&</span>
                 </div>
                 <div className="flex-1 flex flex-col items-center text-center">
-                  <h4 className="font-serif text-3xl md:text-4xl font-bold mb-3 text-slate-800">{weddingData.bride.name}</h4>
-                  <p className="text-sm md:text-base text-slate-600 mb-6 italic">{weddingData.bride.parents}</p>
-                  <a href={weddingData.bride.instagram || "#"} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 px-6 py-2 bg-slate-800 text-white hover:bg-slate-700 hover:scale-105 transition-all rounded-full text-[10px] uppercase tracking-widest shadow-md">
+                  <h4 className="font-serif text-3xl md:text-4xl font-bold mb-3 text-slate-800">{weddingData.groom.name}</h4>
+                  <p className="text-sm md:text-base text-slate-600 mb-6 italic">{weddingData.groom.parents}</p>
+                  <a href={weddingData.groom.instagram || "#"} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 px-6 py-2 bg-slate-800 text-white hover:bg-slate-700 hover:scale-105 transition-all rounded-full text-[10px] uppercase tracking-widest shadow-md">
                     <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg> Instagram
                   </a>
                 </div>
@@ -432,7 +432,7 @@ function WeddingContent() {
         {/* FOOTER */}
         <footer className="text-center py-16 relative z-10 bg-gradient-to-t from-slate-200/80 to-transparent pb-32 md:pb-16 mt-20">
           <p className="text-[10px] uppercase tracking-[0.3em] text-slate-500 mb-4">Terima Kasih</p>
-          <h2 className="font-serif text-3xl mb-2 text-slate-800">{weddingData.groom.nickname} <span className="text-slate-400 font-script">&</span> {weddingData.bride.nickname}</h2>
+          <h2 className="font-serif text-3xl mb-2 text-slate-800">{weddingData.bride.nickname} <span className="text-slate-400 font-script">&</span> {weddingData.groom.nickname}</h2>
           <p className="text-[9px] tracking-widest text-slate-400 uppercase mt-6">Made by Grisha • {new Date().getFullYear()}</p>
         </footer>
 
