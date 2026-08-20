@@ -385,7 +385,8 @@ function WeddingContent() {
         </section>
 
         {/* LOCATION SECTION - Full Screen */}
-        <section id="location" className="relative min-h-screen flex flex-col items-center justify-center px-4 md:px-6 py-20">
+        {/* Mengubah py-20 menjadi pt-10 dan menambahkan pb-32 (padding-bottom) agar kotaknya terdorong naik */}
+        <section id="location" className="relative min-h-screen flex flex-col items-center justify-center px-4 md:px-6 pt-10 pb-32 md:pb-40">
           <ZoomIn delay={0.2}>
             <div className="max-w-xl mx-auto bg-white/70 backdrop-blur-md border border-slate-200 p-6 md:p-12 text-center shadow-xl rounded-xl flex flex-col items-center w-full">
               <MapPin className="text-slate-400 mb-4 md:mb-5 w-6 h-6 md:w-8 md:h-8" />
