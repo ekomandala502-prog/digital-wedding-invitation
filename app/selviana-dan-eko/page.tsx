@@ -58,7 +58,7 @@ const ForegroundLayer = ({ isOpened }: { isOpened: boolean }) => {
       if (isDesktop) {
         setTopOpenedPos("-48vh"); // Tarik jauh ke atas untuk PC (Bisa diubah angkanya kalau masih kurang/lebih)
       } else if (isIOS) {
-        setTopOpenedPos("-24vh"); // Posisi untuk iPhone
+        setTopOpenedPos("-26vh"); // Posisi untuk iPhone
       } else {
         setTopOpenedPos("-20vh"); // Posisi untuk Android (Samsung, dll)
       }
@@ -353,7 +353,8 @@ function WeddingContent() {
         </section>
 
         {/* EVENTS SECTION - Full Screen */}
-        <section id="events" className="relative min-h-screen flex flex-col items-center justify-center px-4 md:px-6 py-20">
+        {/* Mengubah py-20 menjadi pt-10 dan menambahkan pb-32 agar kontennya terdorong naik */}
+        <section id="events" className="relative min-h-screen flex flex-col items-center justify-center px-4 md:px-6 pt-10 pb-28 md:pb-40">
           <FadeUp>
             <div className="text-center mb-10 md:mb-16">
               <h2 className="font-serif text-2xl md:text-5xl uppercase tracking-widest text-slate-800 mb-2 md:mb-4">Wedding Events</h2>
