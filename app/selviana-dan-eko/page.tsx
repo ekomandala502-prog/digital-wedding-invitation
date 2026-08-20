@@ -44,8 +44,23 @@ const DividerElegant = () => (
   </div>
 );
 
-const FadeIn = ({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) => (
-  <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.8, delay }}>{children}</motion.div>
+// ==========================================
+// 3. KOMPONEN ANIMASI KHUSUS SCROLL
+// ==========================================
+const FadeUp = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => (
+  <motion.div className={className} initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, margin: "-50px" }} transition={{ duration: 0.8, delay, ease: "easeOut" }}>{children}</motion.div>
+);
+
+const ZoomIn = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => (
+  <motion.div className={className} initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: false, margin: "-50px" }} transition={{ duration: 0.8, delay, ease: "easeOut" }}>{children}</motion.div>
+);
+
+const SlideInLeft = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => (
+  <motion.div className={className} initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: false, margin: "-50px" }} transition={{ duration: 0.8, delay, ease: "easeOut" }}>{children}</motion.div>
+);
+
+const SlideInRight = ({ children, delay = 0, className = "" }: { children: React.ReactNode, delay?: number, className?: string }) => (
+  <motion.div className={className} initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: false, margin: "-50px" }} transition={{ duration: 0.8, delay, ease: "easeOut" }}>{children}</motion.div>
 );
 
 // ==========================================
@@ -66,27 +81,21 @@ function WeddingContent() {
   const [rsvpAttendance, setRsvpAttendance] = useState('');
   const [rsvpMessage, setRsvpMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  // Data Ucapan dikosongkan secara default
   const [guestWishes, setGuestWishes] = useState<{name: string, attendance: string, message: string}[]>([]);
   const [isLoadingWishes, setIsLoadingWishes] = useState(true);
 
-  // === MASUKKAN URL GOOGLE SCRIPT DI SINI ===
-  const scriptURL: string = "https://script.google.com/macros/s/AKfycbx7Dv8C-2XreSOztoTnZKhn8OMghZIIXWtTm8vUdFm1CzGxw9gRCBkOnGxGU3AoP4yz_g/exec"; // <-- Wajib diisi agar data tersimpan & ditarik
+  // === URL GOOGLE SCRIPT ===
+  const scriptURL: string = "https://script.google.com/macros/s/AKfycbx7Dv8C-2XreSOztoTnZKhn8OMghZIIXWtTm8vUdFm1CzGxw9gRCBkOnGxGU3AoP4yz_g/exec";
 
-  // Fungsi Menarik Data (GET) saat halaman dimuat
   useEffect(() => {
     if (!scriptURL) {
       setIsLoadingWishes(false);
       return;
     }
-    
     fetch(scriptURL)
       .then(res => res.json())
       .then(data => {
-        if (data && data.length > 0) {
-          setGuestWishes(data);
-        }
+        if (data && data.length > 0) setGuestWishes(data);
         setIsLoadingWishes(false);
       })
       .catch(error => {
@@ -95,7 +104,6 @@ function WeddingContent() {
       });
   }, []);
 
-  // Hitung Mundur & Audio
   useEffect(() => {
     audioRef.current = new Audio('/music/wedding.mp3');
     audioRef.current.loop = true;
@@ -137,7 +145,6 @@ function WeddingContent() {
     setTimeout(() => setShowToast(''), 3000);
   };
 
-  // Fungsi Kirim Data (POST)
   const submitRSVP = async (e: React.FormEvent<HTMLFormElement>) => { 
     e.preventDefault();
     setIsSubmitting(true);
@@ -148,32 +155,33 @@ function WeddingContent() {
           method: 'POST',
           mode: 'no-cors', 
           body: JSON.stringify({ nama: rsvpName, kehadiran: rsvpAttendance, ucapan: rsvpMessage }),
-          headers: { 
-            'Content-Type': 'text/plain;charset=utf-8' 
-          }
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' }
         });
       } catch (error) {
         console.error('Error!', error);
       }
     } else {
-      // Simulasi jeda waktu jika URL GSheet belum dimasukkan
       await new Promise(resolve => setTimeout(resolve, 800));
     }
 
-    // Menampilkan ucapan baru langsung di layar tanpa perlu refresh
     setGuestWishes([{ name: rsvpName, attendance: rsvpAttendance, message: rsvpMessage }, ...guestWishes]);
-    
-    setRsvpName('');
-    setRsvpAttendance('');
-    setRsvpMessage('');
+    setRsvpName(''); setRsvpAttendance(''); setRsvpMessage('');
     setIsSubmitting(false);
 
     setShowToast('Ucapan berhasil terkirim!');
     setTimeout(() => setShowToast(''), 3000);
   };
+  // Fungsi agar navigasi bawah meluncur mulus (Smooth Scroll)
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault();
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
-    <main className="relative min-h-screen bg-[#F9F8F3] text-slate-800 font-sans selection:bg-slate-300">
+    <main className="relative min-h-screen bg-[#F9F8F3] text-slate-800 font-sans selection:bg-slate-300 overflow-x-hidden">
       <BackgroundLayer isOpened={isOpened} />
       <ForegroundLayer isOpened={isOpened} />
 
@@ -183,8 +191,8 @@ function WeddingContent() {
           <motion.div exit={{ opacity: 0, transition: { duration: 1.2, delay: 0.4 } }} className="fixed inset-0 z-[60] flex flex-col items-center justify-center overflow-hidden bg-[#F9F8F3]">
             <img src="/images/background.png" alt="bg-cover" className="absolute inset-0 w-full h-full object-cover mix-blend-multiply opacity-60 z-0 pointer-events-none" />
             <div className="absolute inset-0 max-w-[48rem] mx-auto pointer-events-none z-10">
-              <motion.img src="/images/front-top.png" alt="front-top" exit={{ y: "-100vh", transition: { duration: 1.5, ease: [0.76, 0, 0.24, 1] } }} className="absolute top-0 left-0 w-full object-contain object-top drop-shadow-sm" />
-              <motion.img src="/images/front-bot.png" alt="front-bot" exit={{ y: "100vh", transition: { duration: 1.5, ease: [0.76, 0, 0.24, 1] } }} className="absolute bottom-0 left-0 w-full object-contain object-bottom drop-shadow-sm" />
+              <motion.img src="/images/front-top.png" alt="front-top" exit={{ y: "-100vh", transition: { duration: 1.5, ease: [0.76, 0, 0.24, 1] } }} className="absolute top-0 left-0 w-full object-contain opacity-80 object-top drop-shadow-sm" />
+              <motion.img src="/images/front-bot.png" alt="front-bot" exit={{ y: "100vh", transition: { duration: 1.5, ease: [0.76, 0, 0.24, 1] } }} className="absolute bottom-0 left-0 w-full object-contain opacity-80 object-bottom drop-shadow-sm" />
               <motion.img src="/images/main-front.png" alt="main-front" initial={{ x: "-50%", scale: 1, opacity: 1 }} animate={{ x: "-50%", scale: 1, opacity: 1 }} exit={{ x: "-50%", scale: 2.5, opacity: 0, filter: "blur(10px)", transition: { duration: 1.2, ease: "easeInOut" } }} className="absolute top-[18%] md:top-[15%] left-1/2 w-[70vw] md:w-[22rem] lg:w-[26rem] object-contain" />
             </div>
             <motion.div exit={{ y: 50, opacity: 0, transition: { duration: 0.8, ease: "easeIn" } }} className="absolute bottom-[8%] md:bottom-[6%] z-20 text-center px-6 flex flex-col items-center w-full max-w-xl mx-auto">
@@ -206,8 +214,8 @@ function WeddingContent() {
       <div className={`relative z-10 ${!isOpened ? 'h-screen overflow-hidden opacity-0' : 'opacity-100 transition-opacity duration-1000 delay-500'}`}>
         
         {/* HERO SECTION */}
-        <section id="home" className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-32">
-           <FadeIn>
+        <section id="home" className="scroll-mt-[20vh] relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-10 pb-32">
+           <FadeUp>
              <p className="font-script text-4xl md:text-5xl text-slate-600 mb-2">You're Invited</p>
              <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-6">
                <h2 className="font-serif text-5xl md:text-7xl text-slate-800">{weddingData.bride.nickname}</h2>
@@ -226,12 +234,12 @@ function WeddingContent() {
                  </div>
                ))}
              </div>
-           </FadeIn>
+           </FadeUp>
         </section>
 
         {/* QUOTE SECTION */}
         <section className="py-24 px-6 text-center">
-          <FadeIn>
+          <ZoomIn>
             <div className="max-w-4xl mx-auto bg-white/60 backdrop-blur-md border border-white p-8 md:p-12 rounded-2xl shadow-xl flex flex-col items-center">
               <Heart className="text-slate-400 mb-8" size={32} strokeWidth={1} />
               <p className="text-2xl md:text-3xl leading-loose text-slate-800 mb-6 drop-shadow-sm" dir="rtl" style={{ fontFamily: "'Scheherazade New', 'Amiri', serif" }}>
@@ -240,68 +248,94 @@ function WeddingContent() {
               <p className="font-serif italic text-sm md:text-lg leading-relaxed text-slate-600 mb-6 px-4">"{weddingData.quote.text}"</p>
               <p className="text-[10px] md:text-xs tracking-[0.2em] uppercase text-slate-500 font-semibold border-t border-slate-300 pt-4 px-6">QS. An-Nur: 32</p>
             </div>
-          </FadeIn>
+          </ZoomIn>
         </section>
 
         {/* COUPLE SECTION */}
-        <section id="couple" className="py-24 px-6">
-          <FadeIn>
-            <div className="text-center mb-16">
+        <section id="couple" className="scroll-mt-[5vh] py-12 md:py-24 px-6">
+          <FadeUp>
+            <div className="text-center mb-8 md:mb-16">
               <h3 className="font-script text-3xl md:text-4xl text-slate-500 mb-1">The</h3>
               <h2 className="font-serif text-3xl md:text-5xl text-slate-800 uppercase tracking-widest">Bride & Groom</h2>
             </div>
-          </FadeIn>
-          <FadeIn delay={0.2}>
-            <div className="max-w-4xl mx-auto bg-white/70 backdrop-blur-md p-10 md:p-16 border border-slate-200 shadow-xl rounded-2xl">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-10">
-                <div className="flex-1 flex flex-col items-center text-center">
-                  <h4 className="font-serif text-3xl md:text-4xl font-bold mb-3 text-slate-800">{weddingData.bride.name}</h4>
-                  <p className="text-sm md:text-base text-slate-600 mb-6 italic">{weddingData.bride.parents}</p>
-                  <a href={weddingData.bride.instagram || "#"} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 px-6 py-2 bg-slate-800 text-white hover:bg-slate-700 hover:scale-105 transition-all rounded-full text-[10px] uppercase tracking-widest shadow-md">
-                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg> Instagram
-                  </a>
-                </div>
-                <div className="flex flex-col items-center justify-center my-4 md:my-0">
-                  <span className="font-script text-5xl md:text-6xl text-slate-400">&</span>
-                </div>
-                <div className="flex-1 flex flex-col items-center text-center">
-                  <h4 className="font-serif text-3xl md:text-4xl font-bold mb-3 text-slate-800">{weddingData.groom.name}</h4>
-                  <p className="text-sm md:text-base text-slate-600 mb-6 italic">{weddingData.groom.parents}</p>
-                  <a href={weddingData.groom.instagram || "#"} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 px-6 py-2 bg-slate-800 text-white hover:bg-slate-700 hover:scale-105 transition-all rounded-full text-[10px] uppercase tracking-widest shadow-md">
-                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg> Instagram
-                  </a>
-                </div>
-              </div>
+          </FadeUp>
+          
+          <div className="max-w-4xl mx-auto bg-white/70 backdrop-blur-md p-6 md:p-16 border border-slate-200 shadow-xl rounded-2xl">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-3 md:gap-10">
+              
+              {/* Profil Wanita Muncul dari Kiri */}
+              <SlideInLeft delay={0.2} className="flex-1 flex flex-col items-center text-center">
+                <img 
+                  src="/images/bride.png" 
+                  alt="Bride Silhouette" 
+                  className="w-40 h-40 md:w-40 md:h-40 object-cover rounded-full mb-3 border-4 border-white shadow-md bg-white"
+                />
+                <h4 className="font-serif text-2xl md:text-4xl font-bold mb-1 text-slate-800">{weddingData.bride.name}</h4>
+                <p className="text-xs md:text-base text-slate-600 mb-4 italic">{weddingData.bride.parents}</p>
+                <a href={weddingData.bride.instagram || "#"} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 px-6 py-2 bg-slate-800 text-white hover:bg-slate-700 hover:scale-105 transition-all rounded-full text-[10px] uppercase tracking-widest shadow-md">
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg> Instagram
+                </a>
+              </SlideInLeft>
+              
+              <ZoomIn delay={0.4} className="flex flex-col items-center justify-center my-2 md:my-0">
+                <span className="font-script text-4xl md:text-6xl text-slate-400">&</span>
+              </ZoomIn>
+
+              {/* Profil Pria Muncul dari Kanan */}
+              <SlideInRight delay={0.6} className="flex-1 flex flex-col items-center text-center">
+                <img 
+                  src="/images/groom.png" 
+                  alt="Groom Silhouette" 
+                  className="w-40 h-40 md:w-40 md:h-40 object-cover rounded-full mb-3 border-4 border-white shadow-md bg-white"
+                />
+                <h4 className="font-serif text-2xl md:text-4xl font-bold mb-1 text-slate-800">{weddingData.groom.name}</h4>
+                <p className="text-xs md:text-base text-slate-600 mb-4 italic">{weddingData.groom.parents}</p>
+                <a href={weddingData.groom.instagram || "#"} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 px-6 py-2 bg-slate-800 text-white hover:bg-slate-700 hover:scale-105 transition-all rounded-full text-[10px] uppercase tracking-widest shadow-md">
+                  <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg> Instagram
+                </a>
+              </SlideInRight>
             </div>
-          </FadeIn>
+          </div>
         </section>
 
         {/* EVENTS SECTION */}
-        <section id="events" className="pt-24 pb-12 px-6">
-          <FadeIn>
+        <section id="events" className="scroll-mt-[10vh] pt-24 pb-12 px-6">
+          <FadeUp>
             <div className="text-center mb-16">
               <h2 className="font-serif text-3xl md:text-5xl uppercase tracking-widest text-slate-800 mb-4">Wedding Events</h2>
               <DividerElegant />
             </div>
-          </FadeIn>
-          <FadeIn delay={0.2}>
-            <div className="max-w-2xl mx-auto bg-white/70 backdrop-blur-md border border-slate-200 p-10 md:p-14 text-center shadow-xl rounded-xl">
-              {weddingData.events.map((ev, idx) => (
-                <div key={idx} className="mb-10 last:mb-0 relative">
-                  {idx > 0 && <div className="absolute -top-5 left-1/2 -translate-x-1/2 w-16 h-[1px] bg-slate-300"></div>}
-                  <h4 className="font-serif text-3xl md:text-4xl mb-3 text-slate-800">{ev.title}</h4>
-                  <p className="font-medium tracking-widest uppercase text-xs text-slate-500 mb-1">{ev.day}</p>
-                  <p className="font-serif text-xl md:text-2xl font-medium mb-1 text-slate-700">{ev.date}</p>
-                  <p className="text-sm md:text-base text-slate-600">{ev.time}</p>
-                </div>
-              ))}
-            </div>
-          </FadeIn>
+          </FadeUp>
+          
+          <div className="max-w-2xl mx-auto bg-white/70 backdrop-blur-md border border-slate-200 p-10 md:p-14 text-center shadow-xl rounded-xl">
+            {weddingData.events.map((ev, idx) => (
+              <div key={idx}>
+                {/* Garis Pemisah (Hanya muncul di antara acara) */}
+                {idx > 0 && (
+                  <FadeUp delay={0.2 * idx}>
+                    <div className="flex justify-center my-12 md:my-14">
+                      <div className="w-24 h-[1px] bg-slate-300"></div>
+                    </div>
+                  </FadeUp>
+                )}
+                
+                {/* Konten Acara */}
+                <FadeUp delay={0.2 * (idx + 1)}>
+                  <div className="relative">
+                    <h4 className="font-serif text-3xl md:text-4xl mb-3 text-slate-800">{ev.title}</h4>
+                    <p className="font-medium tracking-widest uppercase text-xs text-slate-500 mb-1">{ev.day}</p>
+                    <p className="font-serif text-xl md:text-2xl font-medium mb-1 text-slate-700">{ev.date}</p>
+                    <p className="text-sm md:text-base text-slate-600">{ev.time}</p>
+                  </div>
+                </FadeUp>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* LOCATION SECTION */}
-        <section id="location" className="pb-24 pt-6 px-6">
-          <FadeIn delay={0.4}>
+        <section id="location" className="scroll-mt-[25vh] pb-24 pt-6 px-6">
+          <ZoomIn delay={0.2}>
             <div className="max-w-xl mx-auto bg-white/70 backdrop-blur-md border border-slate-200 p-8 md:p-12 text-center shadow-xl rounded-xl flex flex-col items-center">
               <MapPin className="text-slate-400 mb-5" size={32} />
               <h3 className="font-serif text-2xl md:text-3xl mb-6 text-slate-800">Lokasi Acara</h3>
@@ -311,68 +345,38 @@ function WeddingContent() {
                 <MapPin size={14} /> Buka Google Maps
               </a>
             </div>
-          </FadeIn>
+          </ZoomIn>
         </section>
 
         {/* ==========================================
-            RSVP SECTION (Kini Terkoneksi GSheet)
+            RSVP SECTION
         ========================================== */}
-        <section id="rsvp" className="py-24 px-6">
-          <FadeIn>
+        <section id="rsvp" className="scroll-mt-[10vh] py-24 px-6">
+          <FadeUp>
             <div className="text-center mb-12">
               <h2 className="font-serif text-3xl md:text-5xl text-slate-800 mb-4">RSVP & Wishes</h2>
               <p className="text-slate-600 max-w-md mx-auto text-xs md:text-sm">Kehadiran dan doa restu Bapak/Ibu merupakan kehormatan bagi kami.</p>
             </div>
-          </FadeIn>
+          </FadeUp>
           
           <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
-            <FadeIn delay={0.2}>
+            <SlideInLeft delay={0.2}>
               <form className="space-y-5 bg-white/70 backdrop-blur-md p-6 md:p-8 border border-slate-200 shadow-xl rounded-xl" onSubmit={submitRSVP}>
                 <h3 className="font-serif text-xl text-slate-800 mb-4 border-b border-slate-200 pb-3">Konfirmasi Kehadiran</h3>
-                
-                <input 
-                  type="text" 
-                  placeholder="Nama Lengkap" 
-                  value={rsvpName}
-                  onChange={(e) => setRsvpName(e.target.value)}
-                  disabled={isSubmitting}
-                  className="w-full px-4 py-3 bg-transparent border-b border-slate-300 focus:outline-none focus:border-slate-800 text-slate-800 text-sm disabled:opacity-50" 
-                  required 
-                />
-                
-                <select 
-                  value={rsvpAttendance}
-                  onChange={(e) => setRsvpAttendance(e.target.value)}
-                  disabled={isSubmitting}
-                  className="w-full px-4 py-3 bg-transparent border-b border-slate-300 focus:outline-none focus:border-slate-800 text-slate-800 text-sm disabled:opacity-50" 
-                  required 
-                >
+                <input type="text" placeholder="Nama Lengkap" value={rsvpName} onChange={(e) => setRsvpName(e.target.value)} disabled={isSubmitting} className="w-full px-4 py-3 bg-transparent border-b border-slate-300 focus:outline-none focus:border-slate-800 text-slate-800 text-sm disabled:opacity-50" required />
+                <select value={rsvpAttendance} onChange={(e) => setRsvpAttendance(e.target.value)} disabled={isSubmitting} className="w-full px-4 py-3 bg-transparent border-b border-slate-300 focus:outline-none focus:border-slate-800 text-slate-800 text-sm disabled:opacity-50" required>
                   <option value="" disabled>Apakah Anda akan hadir?</option>
                   <option value="Hadir">Ya, Saya Akan Hadir</option>
                   <option value="Tidak">Maaf, Tidak Dapat Hadir</option>
                 </select>
-                
-                <textarea 
-                  rows={3} 
-                  placeholder="Tuliskan ucapan dan doa..." 
-                  value={rsvpMessage}
-                  onChange={(e) => setRsvpMessage(e.target.value)}
-                  disabled={isSubmitting}
-                  className="w-full px-4 py-3 bg-transparent border-b border-slate-300 focus:outline-none focus:border-slate-800 text-slate-800 resize-none text-sm disabled:opacity-50" 
-                  required
-                ></textarea>
-                
-                <button 
-                  type="submit" 
-                  disabled={isSubmitting}
-                  className="w-full py-3 bg-slate-800 text-white font-semibold text-[10px] tracking-[0.2em] uppercase hover:bg-slate-700 transition-colors mt-2 rounded-sm disabled:bg-slate-500"
-                >
+                <textarea rows={3} placeholder="Tuliskan ucapan dan doa..." value={rsvpMessage} onChange={(e) => setRsvpMessage(e.target.value)} disabled={isSubmitting} className="w-full px-4 py-3 bg-transparent border-b border-slate-300 focus:outline-none focus:border-slate-800 text-slate-800 resize-none text-sm disabled:opacity-50" required></textarea>
+                <button type="submit" disabled={isSubmitting} className="w-full py-3 bg-slate-800 text-white font-semibold text-[10px] tracking-[0.2em] uppercase hover:bg-slate-700 transition-colors mt-2 rounded-sm disabled:bg-slate-500">
                   {isSubmitting ? 'Mengirim...' : 'Kirim Ucapan'}
                 </button>
               </form>
-            </FadeIn>
+            </SlideInLeft>
             
-            <FadeIn delay={0.4}>
+            <SlideInRight delay={0.4}>
               <div className="h-full min-h-[350px] max-h-[450px] overflow-y-auto space-y-4 pr-3 custom-scrollbar relative">
                 {isLoadingWishes ? (
                   <div className="flex justify-center items-center h-full text-slate-400 text-sm animate-pulse">Memuat ucapan...</div>
@@ -380,12 +384,7 @@ function WeddingContent() {
                   <div className="flex justify-center items-center h-full text-slate-400 text-sm italic">Belum ada ucapan.</div>
                 ) : (
                   guestWishes.map((wish, i) => (
-                    <motion.div 
-                      key={i} 
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="bg-white/60 backdrop-blur-sm p-5 border border-slate-200 shadow-md rounded-lg relative"
-                    >
+                    <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-white/60 backdrop-blur-sm p-5 border border-slate-200 shadow-md rounded-lg relative">
                       <div className="flex justify-between items-start mb-2">
                         <span className="font-serif font-bold text-base text-slate-800">{wish.name}</span>
                         <span className={`text-[9px] uppercase tracking-widest px-2 py-1 rounded-full ${wish.attendance === 'Hadir' ? 'bg-slate-200 text-slate-600' : 'bg-red-100 text-red-600'}`}>
@@ -397,13 +396,13 @@ function WeddingContent() {
                   ))
                 )}
               </div>
-            </FadeIn>
+            </SlideInRight>
           </div>
         </section>
 
         {/* GIFT SECTION */}
-        <section id="gift" className="py-24 px-6 mb-20">
-          <FadeIn>
+        <section id="gift" className="scroll-mt-[10vh] py-24 px-6 mb-20">
+          <FadeUp>
             <div className="text-center max-w-3xl mx-auto bg-white/70 backdrop-blur-md p-8 md:p-10 border border-slate-200 shadow-xl rounded-2xl">
               <Gift className="mx-auto text-slate-400 mb-6" size={32} strokeWidth={1} />
               <h2 className="font-serif text-3xl md:text-4xl text-slate-800 mb-4">Wedding Gift</h2>
@@ -413,7 +412,7 @@ function WeddingContent() {
               
               <div className="grid gap-6 md:grid-cols-2">
                 {weddingData.bankAccounts.map((acc, idx) => (
-                  <div key={idx} className="bg-white border border-slate-200 p-6 shadow-sm rounded-xl relative flex flex-col justify-between group">
+                  <ZoomIn key={idx} delay={0.2 * (idx + 1)} className="bg-white border border-slate-200 p-6 shadow-sm rounded-xl relative flex flex-col justify-between group">
                     <div>
                       <p className="font-bold tracking-widest text-slate-500 mb-2 uppercase text-xs">{acc.bank}</p>
                       <p className="font-serif text-xl mb-2 text-slate-800">{acc.number}</p>
@@ -422,11 +421,11 @@ function WeddingContent() {
                     <button onClick={() => copyToClipboard(acc.number)} className="flex items-center justify-center gap-2 w-full py-2 border border-slate-300 text-slate-600 text-[10px] tracking-widest uppercase hover:bg-slate-100 transition-all rounded-sm">
                       <Copy size={12} /> Salin Rekening
                     </button>
-                  </div>
+                  </ZoomIn>
                 ))}
               </div>
             </div>
-          </FadeIn>
+          </FadeUp>
         </section>
 
         {/* FOOTER */}
@@ -436,13 +435,14 @@ function WeddingContent() {
           <p className="text-[9px] tracking-widest text-slate-400 uppercase mt-6">Made by Grisha • {new Date().getFullYear()}</p>
         </footer>
 
-        {/* NAVIGASI TAMBAH LOKASI */}
-        <nav className="md:hidden fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-md border-t border-slate-200 z-[70] flex justify-between items-center px-4 py-3 text-[8px] sm:text-[9px] uppercase tracking-widest text-slate-500 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
-          <a href="#home" className="flex flex-col items-center gap-1 hover:text-slate-800 transition w-1/5"><Home size={16} strokeWidth={1.5} /> Home</a>
-          <a href="#couple" className="flex flex-col items-center gap-1 hover:text-slate-800 transition w-1/5"><Heart size={16} strokeWidth={1.5} /> Pasangan</a>
-          <a href="#events" className="flex flex-col items-center gap-1 hover:text-slate-800 transition w-1/5"><Calendar size={16} strokeWidth={1.5} /> Acara</a>
-          <a href="#location" className="flex flex-col items-center gap-1 hover:text-slate-800 transition w-1/5"><MapPin size={16} strokeWidth={1.5} /> Lokasi</a>
-          <a href="#rsvp" className="flex flex-col items-center gap-1 hover:text-slate-800 transition w-1/5"><Mail size={16} strokeWidth={1.5} /> RSVP</a>
+        {/* NAVIGASI BAWAH DENGAN SMOOTH SCROLL (6 ITEM) */}
+        <nav className="md:hidden fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-md border-t border-slate-200 z-[70] flex justify-between items-center px-2 py-3 text-[8px] sm:text-[9px] uppercase tracking-widest text-slate-500 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]">
+          <a href="#home" onClick={(e) => handleNavClick(e, 'home')} className="flex flex-col items-center gap-1 hover:text-slate-800 transition flex-1"><Home size={16} strokeWidth={1.5} /> Home</a>
+          <a href="#couple" onClick={(e) => handleNavClick(e, 'couple')} className="flex flex-col items-center gap-1 hover:text-slate-800 transition flex-1"><Heart size={16} strokeWidth={1.5} /> Couple</a>
+          <a href="#events" onClick={(e) => handleNavClick(e, 'events')} className="flex flex-col items-center gap-1 hover:text-slate-800 transition flex-1"><Calendar size={16} strokeWidth={1.5} /> Event</a>
+          <a href="#location" onClick={(e) => handleNavClick(e, 'location')} className="flex flex-col items-center gap-1 hover:text-slate-800 transition flex-1"><MapPin size={16} strokeWidth={1.5} /> Location</a>
+          <a href="#rsvp" onClick={(e) => handleNavClick(e, 'rsvp')} className="flex flex-col items-center gap-1 hover:text-slate-800 transition flex-1"><Mail size={16} strokeWidth={1.5} /> RSVP</a>
+          <a href="#gift" onClick={(e) => handleNavClick(e, 'gift')} className="flex flex-col items-center gap-1 hover:text-slate-800 transition flex-1"><Gift size={16} strokeWidth={1.5} /> Gift</a>
         </nav>
 
         <button onClick={toggleMusic} className="fixed bottom-24 md:bottom-10 right-6 z-[70] w-12 h-12 bg-white/90 backdrop-blur text-slate-700 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.15)] flex items-center justify-center hover:scale-110 transition-transform border border-slate-200">

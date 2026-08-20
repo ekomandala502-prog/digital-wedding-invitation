@@ -68,13 +68,13 @@ export const weddingData = {
   bankAccounts: [
     {
       bank: "BCA",
-      name: "Eko Mandala",
-      number: "1234567890"
+      name: "Selviana",
+      number: "7006002012"
     },
     {
-      bank: "Mandiri",
-      name: "Juliet Capulet",
-      number: "0987654321"
+      bank: "BCA",
+      name: "Eko Mandala",
+      number: "7005593832"
     }
   ]
 };
