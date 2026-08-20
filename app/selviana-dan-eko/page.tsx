@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { weddingData } from './data';
+import { weddingData } from '../data';
 import { Heart, Calendar, Mail, Gift, MapPin, Copy, Play, Pause, Home } from 'lucide-react';
 
 // ==========================================
