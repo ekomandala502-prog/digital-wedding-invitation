@@ -252,12 +252,64 @@ function WeddingContent() {
       <AnimatePresence>
         {!isOpened && (
           <motion.div exit={{ opacity: 0, transition: { duration: 1.2, delay: 0.4 } }} className="fixed inset-0 z-[60] flex flex-col items-center justify-center overflow-hidden bg-[#F9F8F3]">
-            <img src="/images/background.png" alt="bg-cover" className="absolute inset-0 w-full h-full object-cover mix-blend-multiply opacity-60 z-0 pointer-events-none" />
+            
+            {/* Latar Belakang Dasar - FIX UNTUK PC */}
+            <img src="/images/background.png" alt="bg-cover" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full md:w-[100vh] md:h-[100vw] md:-rotate-90 object-cover mix-blend-multiply opacity-60 z-0 pointer-events-none" />
+            
+            {/* 3 ASSET BARU UNTUK COVER DEPAN */}
+            
+            {/* Cloud 1 - Awan Atas */}
+            <motion.img 
+              src="/images/front-cloud1.png" 
+              alt="Front Cloud 1" 
+              initial={{ opacity: 0, y: -40 }}
+              animate={{ opacity: 0.40, y: 0 }}
+              exit={{ y: "-100vh", opacity: 0, transition: { duration: 1.5, ease: [0.76, 0, 0.24, 1] } }} 
+              className="absolute top-0 -left-[15vw] md:left-0 w-[130vw] md:w-full max-w-none md:max-w-full object-cover object-top origin-top z-[2] pointer-events-none" 
+            />
+            
+            {/* Mount - Gunung Kanan */}
+            <motion.img 
+              src="/images/front-mount.png" 
+              alt="Front Mount" 
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 0.80, x: 0 }}
+              exit={{ x: "100vw", opacity: 0, transition: { duration: 1.5, ease: [0.76, 0, 0.24, 1] } }} 
+              className="absolute top-[30%] md:top-[15%] right-[-30%] md:right-[0%] w-[120vw] md:w-[45vw] md:max-w-[700px] max-w-none object-contain z-[3] pointer-events-none drop-shadow-lg" 
+            />
+
+            {/* Cloud 2 - Awan Bawah */}
+            <motion.img 
+              src="/images/front-cloud2.png" 
+              alt="Front Cloud 2" 
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 0.40, y: 0 }}
+              exit={{ y: "100vh", opacity: 0, transition: { duration: 1.5, ease: [0.76, 0, 0.24, 1] } }} 
+              className="absolute bottom-0 -left-[15vw] md:left-0 w-[130vw] md:w-full max-w-none md:max-w-full object-cover object-bottom origin-bottom z-[4] pointer-events-none" 
+            />
+
+            {/* BINGKAI ATAS & BAWAH */}
+            {/* md:-top-[15vh] akan menarik gambar naik khusus di PC */}
+            <motion.img 
+              src="/images/front-top.png" 
+              alt="front-top" 
+              exit={{ y: "-100vh", transition: { duration: 1.5, ease: [0.76, 0, 0.24, 1] } }} 
+              className="absolute top-0 md:-top-[25vh] lg:-top-[40vh] left-0 w-full min-w-[100vw] object-cover md:object-contain object-top drop-shadow-sm z-[5] pointer-events-none" 
+            />
+            {/* md:-bottom-[15vh] akan menarik gambar turun khusus di PC */}
+            <motion.img 
+              src="/images/front-bot.png" 
+              alt="front-bot" 
+              exit={{ y: "100vh", transition: { duration: 1.5, ease: [0.76, 0, 0.24, 1] } }} 
+              className="absolute bottom-0 md:-bottom-[25vh] lg:-bottom-[40vh] left-0 w-full min-w-[100vw] object-cover md:object-contain object-bottom drop-shadow-sm z-[5] pointer-events-none" 
+            />
+
+            {/* Asset Ornamen Utama (Gunungan Tengah) */}
             <div className="absolute inset-0 max-w-[48rem] mx-auto pointer-events-none z-10">
-              <motion.img src="/images/front-top.png" alt="front-top" exit={{ y: "-100vh", transition: { duration: 1.5, ease: [0.76, 0, 0.24, 1] } }} className="absolute top-0 left-0 w-full object-contain object-top drop-shadow-sm" />
-              <motion.img src="/images/front-bot.png" alt="front-bot" exit={{ y: "100vh", transition: { duration: 1.5, ease: [0.76, 0, 0.24, 1] } }} className="absolute bottom-0 left-0 w-full object-contain object-bottom drop-shadow-sm" />
               <motion.img src="/images/main-front.png" alt="main-front" initial={{ x: "-50%", scale: 1, opacity: 1 }} animate={{ x: "-50%", scale: 1, opacity: 1 }} exit={{ x: "-50%", scale: 2.5, opacity: 0, filter: "blur(10px)", transition: { duration: 1.2, ease: "easeInOut" } }} className="absolute top-[18%] md:top-[15%] left-1/2 w-[75vw] sm:w-[60vw] md:w-[22rem] lg:w-[26rem] object-contain" />
             </div>
+            
+            {/* Teks Undangan & Tombol Buka */}
             <motion.div exit={{ y: 50, opacity: 0, transition: { duration: 0.8, ease: "easeIn" } }} className="absolute bottom-[8%] md:bottom-[6%] z-20 text-center px-4 md:px-6 flex flex-col items-center w-full max-w-xl mx-auto">
               <p className="tracking-[0.3em] text-[9px] md:text-xs uppercase mb-2 md:mb-3 text-slate-500 font-medium">The Wedding Of</p>
               <h1 className="font-serif text-3xl sm:text-4xl md:text-6xl mb-4 md:mb-6 text-slate-800 drop-shadow-sm">{weddingData.bride.nickname} <span className="font-script text-slate-400 mx-0.5 md:mx-1">&</span> {weddingData.groom.nickname}</h1>
@@ -279,7 +331,11 @@ function WeddingContent() {
         {/* HERO SECTION - Full Screen */}
         <section id="home" className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 md:px-6 py-20">
            <FadeUp>
-             <p className="font-script text-3xl md:text-5xl text-slate-600 mb-2">You're Invited</p>
+             <p className="font-script text-3xl md:text-5xl text-slate-600 mb-1 md:mb-2">You're Invited</p>
+             
+             {/* Teks Baru yang Ditambahkan */}
+             <p className="tracking-[0.3em] text-[9px] md:text-xs uppercase mb-6 md:mb-8 text-slate-500 font-medium">To The Wedding Of</p>
+             
              <div className="flex flex-col md:flex-row items-center justify-center gap-1 md:gap-6">
                <h2 className="font-serif text-4xl sm:text-5xl md:text-7xl text-slate-800">{weddingData.bride.nickname}</h2>
                <span className="font-script text-3xl sm:text-4xl md:text-5xl text-slate-400">&</span>
@@ -461,7 +517,7 @@ function WeddingContent() {
               <Gift className="mx-auto text-slate-400 mb-4 md:mb-6 w-6 h-6 md:w-8 md:h-8" strokeWidth={1} />
               <h2 className="font-serif text-2xl md:text-4xl text-slate-800 mb-3 md:mb-4">Wedding Gift</h2>
               <p className="text-slate-600 mb-8 md:mb-10 text-[11px] md:text-sm leading-relaxed px-2">
-                Bagi yang ingin memberikan tanda kasih untuk kami, dapat melalui nomor rekening di bawah ini:
+                Tanpa mengurangi rasa hormat, bagi Bapak/Ibu/Saudara/i yang ingin memberikan tanda kasih untuk kami, dapat melalui:
               </p>
               
               <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2">
