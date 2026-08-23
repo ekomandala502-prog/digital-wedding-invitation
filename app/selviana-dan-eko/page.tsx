@@ -305,8 +305,23 @@ function WeddingContent() {
             />
 
             {/* Asset Ornamen Utama (Gunungan Tengah) */}
+            {/* Asset Ornamen Utama (Gunungan Tengah) */}
             <div className="absolute inset-0 max-w-[48rem] mx-auto pointer-events-none z-10">
-              <motion.img src="/images/main-front.png" alt="main-front" initial={{ x: "-50%", scale: 1, opacity: 1 }} animate={{ x: "-50%", scale: 1, opacity: 1 }} exit={{ x: "-50%", scale: 2.5, opacity: 0, filter: "blur(10px)", transition: { duration: 1.2, ease: "easeInOut" } }} className="absolute top-[18%] md:top-[15%] left-1/2 w-[75vw] sm:w-[60vw] md:w-[22rem] lg:w-[26rem] object-contain" />
+              <motion.img 
+                src="/images/main-front.png" 
+                alt="main-front" 
+                // 1. OPACITY DITURUNKAN: Ubah angka 0.85 ini jika ingin lebih pudar (misal 0.7 atau 0.6)
+                initial={{ x: "-50%", scale: 1, opacity: 0.85 }} 
+                animate={{ x: "-50%", scale: 1, opacity: 0.85 }} 
+                exit={{ x: "-50%", scale: 2.5, opacity: 0, filter: "blur(10px)", transition: { duration: 1.2, ease: "easeInOut" } }} 
+                className="absolute top-[18%] md:top-[15%] left-1/2 w-[75vw] sm:w-[60vw] md:w-[22rem] lg:w-[26rem] object-contain" 
+                
+                // 2. FADE DI BAWAH GAMBAR: Menggunakan masking gradient agar bawahnya memudar halus
+                style={{ 
+                  WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%)',
+                  maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%)' 
+                }}
+              />
             </div>
             
             {/* Teks Undangan & Tombol Buka */}
@@ -371,8 +386,8 @@ function WeddingContent() {
           </ZoomIn>
         </section>
 
-        {/* COUPLE SECTION - Full Screen */}
-        <section id="couple" className="relative min-h-screen flex flex-col items-center justify-center px-4 md:px-6 py-20">
+        {/* COUPLE SECTION - Mengalir di HP, Full-Screen rapi di PC */}
+        <section id="couple" className="relative py-20 px-4 md:min-h-screen md:flex md:flex-col md:items-center md:justify-center md:py-0">
           <FadeUp>
             <div className="text-center mb-6 md:mb-16">
               <h3 className="font-script text-2xl md:text-4xl text-slate-500 mb-1">The</h3>
@@ -382,31 +397,33 @@ function WeddingContent() {
           
           <div className="max-w-4xl mx-auto bg-white/70 backdrop-blur-md p-4 sm:p-6 md:p-16 border border-slate-200 shadow-xl rounded-2xl w-full">
             <div className="flex flex-col md:flex-row items-center justify-between gap-1 sm:gap-4 md:gap-10">
+              
               <SlideInLeft delay={0.2} className="flex-1 flex flex-col items-center text-center w-full">
-                <img src="/images/bride.png" alt="Bride Silhouette" className="w-20 h-20 sm:w-24 sm:h-24 md:w-40 md:h-40 object-cover rounded-full mb-2 md:mb-6 border-2 md:border-4 border-white shadow-md bg-white" />
+                {/* Lingkaran dihapus, ukuran sedikit diperbesar (w-28/w-48), dan diganti jadi bride.jpg */}
+                <img src="/images/bride.png" alt="Bride" className="w-24 h-24 sm:w-28 sm:h-28 md:w-48 md:h-48 object-contain mb-3 md:mb-6 drop-shadow-xl hover:scale-105 transition-transform duration-300" />
                 <h4 className="font-serif text-xl sm:text-2xl md:text-4xl font-bold mb-1 md:mb-3 text-slate-800 leading-tight">{weddingData.bride.name}</h4>
                 <p className="text-[10px] sm:text-xs md:text-base text-slate-600 mb-3 md:mb-6 italic leading-relaxed">{weddingData.bride.parents}</p>
-                {/* Tombol IG Otomatis */}
                 <a href={weddingData.bride.instagram || "#"} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-1.5 md:gap-2 px-4 py-1.5 md:px-6 md:py-2 bg-slate-800 text-white hover:bg-slate-700 hover:scale-105 transition-all rounded-full text-[9px] md:text-xs tracking-wider shadow-md lowercase max-w-[90%] md:max-w-full overflow-hidden">
                   <svg className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg> 
                   <span className="truncate">{getIgUsername(weddingData.bride.instagram)}</span>
                 </a>
               </SlideInLeft>
               
-              <ZoomIn delay={0.4} className="flex flex-col items-center justify-center my-1 md:my-0">
+              <ZoomIn delay={0.4} className="flex flex-col items-center justify-center my-3 md:my-0">
                 <span className="font-script text-3xl md:text-6xl text-slate-400">&</span>
               </ZoomIn>
 
               <SlideInRight delay={0.6} className="flex-1 flex flex-col items-center text-center w-full">
-                <img src="/images/groom.png" alt="Groom Silhouette" className="w-20 h-20 sm:w-24 sm:h-24 md:w-40 md:h-40 object-cover rounded-full mb-2 md:mb-6 border-2 md:border-4 border-white shadow-md bg-white" />
+                {/* Lingkaran dihapus, ukuran sedikit diperbesar (w-28/w-48), dan diganti jadi groom.jpg */}
+                <img src="/images/groom.png" alt="Groom" className="w-24 h-24 sm:w-28 sm:h-28 md:w-48 md:h-48 object-contain mb-3 md:mb-6 drop-shadow-xl hover:scale-105 transition-transform duration-300" />
                 <h4 className="font-serif text-xl sm:text-2xl md:text-4xl font-bold mb-1 md:mb-3 text-slate-800 leading-tight">{weddingData.groom.name}</h4>
                 <p className="text-[10px] sm:text-xs md:text-base text-slate-600 mb-3 md:mb-6 italic leading-relaxed">{weddingData.groom.parents}</p>
-                {/* Tombol IG Otomatis */}
                 <a href={weddingData.groom.instagram || "#"} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-1.5 md:gap-2 px-4 py-1.5 md:px-6 md:py-2 bg-slate-800 text-white hover:bg-slate-700 hover:scale-105 transition-all rounded-full text-[9px] md:text-xs tracking-wider shadow-md lowercase max-w-[90%] md:max-w-full overflow-hidden">
                   <svg className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg> 
                   <span className="truncate">{getIgUsername(weddingData.groom.instagram)}</span>
                 </a>
               </SlideInRight>
+              
             </div>
           </div>
         </section>
