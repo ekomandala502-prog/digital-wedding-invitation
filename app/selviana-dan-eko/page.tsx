@@ -190,6 +190,22 @@ function WeddingContent() {
       setIsPlaying(true); 
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // --- FITUR FULLSCREEN KHUSUS HP ---
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      const elem = document.documentElement as any;
+      try {
+        if (elem.requestFullscreen) {
+          elem.requestFullscreen().catch((err: any) => console.log(err));
+        } else if (elem.webkitRequestFullscreen) { /* Safari / iOS */
+          elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { /* Edge lama */
+          elem.msRequestFullscreen();
+        }
+      } catch (error) {
+        console.log("Fullscreen API tidak didukung di browser ini.", error);
+      }
+    }
   };
 
   const toggleMusic = () => {
