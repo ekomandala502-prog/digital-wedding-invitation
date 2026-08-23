@@ -184,27 +184,46 @@ function WeddingContent() {
   }, []);
 
   const openInvitation = () => {
-    setIsOpened(true);
-    if (audioRef.current) { 
-      audioRef.current.play().catch(() => {}); 
-      setIsPlaying(true); 
-    }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // 1. Kita bungkus fungsi animasi transisinya ke dalam variabel
+    const executeTransition = () => {
+      setIsOpened(true);
+      if (audioRef.current) { 
+        audioRef.current.play().catch(() => {}); 
+        setIsPlaying(true); 
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
-    // --- FITUR FULLSCREEN KHUSUS HP ---
+    // 2. Cek apakah ini di HP
     if (typeof window !== 'undefined' && window.innerWidth < 768) {
       const elem = document.documentElement as any;
+      let isFullscreenTriggered = false;
+
       try {
         if (elem.requestFullscreen) {
           elem.requestFullscreen().catch((err: any) => console.log(err));
+          isFullscreenTriggered = true;
         } else if (elem.webkitRequestFullscreen) { /* Safari / iOS */
           elem.webkitRequestFullscreen();
-        } else if (elem.msRequestFullscreen) { /* Edge lama */
-          elem.msRequestFullscreen();
+          isFullscreenTriggered = true;
         }
       } catch (error) {
-        console.log("Fullscreen API tidak didukung di browser ini.", error);
+        console.log("Fullscreen error.", error);
       }
+
+      // 3. LOGIKA PENUNDAAN (DELAY)
+      if (isFullscreenTriggered) {
+        // Tahan di halaman cover selama 500ms (0.5 detik) sampai kedip browser selesai, 
+        // BARU jalankan animasi transisinya.
+        setTimeout(() => {
+          executeTransition();
+        }, 500); 
+      } else {
+        executeTransition(); // Kalau gagal fullscreen, langsung buka aja
+      }
+    } else {
+      // Untuk PC (layar lebar), langsung jalanin transisi tanpa fullscreen
+      executeTransition();
     }
   };
 
