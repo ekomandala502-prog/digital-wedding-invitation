@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     images: [
       {
         // PENTING: Harus menggunakan URL lengkap (https://...) agar terbaca oleh WhatsApp
-        url: "https://grisha.my.id/selviana-dan-eko/images/thumbnail.jpg", 
+        url: "https://grisha.my.id/images/thumbnail.jpg", 
         width: 1080,
         height: 1080,
         alt: "Cover Undangan Selvi & Eko",
