@@ -8,24 +8,7 @@ const greatVibes = Great_Vibes({ weight: "400", subsets: ["latin"], variable: "-
 
 export const metadata: Metadata = {
   title: "The Wedding of Selvi & Eko",
-  description: "Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di acara pernikahan kami.",
-  openGraph: {
-    title: "The Wedding of Selvi & Eko",
-    description: "Undangan Pernikahan",
-    url: "https://grisha.my.id/selviana-dan-eko", // Link utama web lu
-    siteName: "Undangan Pernikahan Selvi & Eko",
-    images: [
-      {
-        // PENTING: Harus menggunakan URL lengkap (https://...) agar terbaca oleh WhatsApp
-        url: "https://grisha.my.id/images/thumbnail.jpg", 
-        width: 1080,
-        height: 1080,
-        alt: "Cover Undangan Selvi & Eko",
-      },
-    ],
-    locale: "id_ID",
-    type: "website",
-  },
+  description: "Undangan Pernikahan",
 };
 
 export default function RootLayout({
